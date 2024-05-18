@@ -75,18 +75,6 @@ export const withIosAppDelegate: ConfigPlugin = (config) => {
 
     [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
 
-    [RNCallKeep reportNewIncomingCall: uuid
-                handle: handle
-                handleType: @"generic"
-                hasVideo: NO
-                localizedCallerName: callerName
-                supportsHolding: YES
-                supportsDTMF: YES
-                supportsGrouping: YES
-                supportsUngrouping: YES
-                fromPushKit: YES
-                payload: nil
-                withCompletionHandler: completion];
 }
 
 @end`

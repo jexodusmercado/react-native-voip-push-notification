@@ -6,6 +6,8 @@ const generateCode_1 = require("@expo/config-plugins/build/utils/generateCode");
 const withIosAppDelegate = (config) => {
     return (0, config_plugins_1.withAppDelegate)(config, (cfg) => {
         const { modResults } = cfg;
+        // method to invoke voip registration
+        // I decided to use this as soon as the app starts to avoid js delay issues
         const methodInvocationBlock = `[RNVoipPushNotificationManager voipRegistration];`;
         // https://regex101.com/r/mPgaq6/1
         const methodInvocationLineMatcher = /(?:self\.moduleName\s*=\s*@\"([^"]*)\";)|(?:(self\.|_)(\w+)\s?=\s?\[\[UMModuleRegistryAdapter alloc\])|(?:RCTBridge\s?\*\s?(\w+)\s?=\s?\[(\[RCTBridge alloc\]|self\.reactDelegate))/g;
@@ -18,6 +20,7 @@ const withIosAppDelegate = (config) => {
 #import "RNVoipPushNotificationManager.h"
 #import "RNCallKeep.h"`);
         }
+        // Merging the method invocation block into the AppDelegate.m file
         try {
             modResults.contents = (0, generateCode_1.mergeContents)({
                 tag: "RNVoipPushNotificationAppDelegate",
@@ -63,18 +66,6 @@ const withIosAppDelegate = (config) => {
 
     [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
 
-    [RNCallKeep reportNewIncomingCall: uuid
-                handle: handle
-                handleType: @"generic"
-                hasVideo: NO
-                localizedCallerName: callerName
-                supportsHolding: YES
-                supportsDTMF: YES
-                supportsGrouping: YES
-                supportsUngrouping: YES
-                fromPushKit: YES
-                payload: nil
-                withCompletionHandler: completion];
 }
 
 @end`);
