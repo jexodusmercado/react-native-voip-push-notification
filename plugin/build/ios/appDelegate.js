@@ -59,13 +59,31 @@ const withIosAppDelegate = (config) => {
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type withCompletionHandler:(void (^)(void))completion
 {
     NSString *uuid = payload.dictionaryPayload[@"uuid"];
-    NSString *callerName = [NSString stringWithFormat:@"%@ (Connecting...)", payload.dictionaryPayload[@"callerName"]];
+    NSString *callerName = [NSString stringWithFormat:@"%@ is Calling", payload.dictionaryPayload[@"callerName"]];
     NSString *handle = payload.dictionaryPayload[@"handle"];
-
+    BOOL isVideo = [payload.dictionaryPayload[@"isVideo"] boolValue];
+    BOOL videoVal = NO;
+  
+    if(isVideo) {
+      videoVal = YES;
+    }
+  
     [RNVoipPushNotificationManager addCompletionHandler:uuid completionHandler:completion];
 
     [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
-
+  
+    [RNCallKeep reportNewIncomingCall: uuid
+                               handle: handle
+                           handleType: @"generic"
+                             hasVideo: videoVal
+                  localizedCallerName: callerName
+                      supportsHolding: YES
+                         supportsDTMF: YES
+                     supportsGrouping: YES
+                   supportsUngrouping: YES
+                          fromPushKit: YES
+                              payload: nil
+                withCompletionHandler: completion];
 }
 
 @end`);
